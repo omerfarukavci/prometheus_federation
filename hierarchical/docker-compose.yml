@@ -26,9 +26,26 @@ services:
     - --config.file=/etc/prometheus/prometheus.yml
     volumes:
     - ./prometheus/slave/prometheus2.yml:/etc/prometheus/prometheus.yml:ro
-    
+  
+  #=======Metrikleri Toplanacak Hedef Konteynerler============================
   node_exporter1:
     image: prom/node-exporter:${NODE_EXPORTER_TAG}
     
   node_exporter2:
     image: prom/node-exporter:${NODE_EXPORTER_TAG}
+    
+  #=======Grafana Servisi============================
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    user: root:root
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    volumes:
+      - ./grafana/data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning/
+    environment:
+      - GF_SECURITY_ADMIN_USER=${grafana_user}
+      - GF_SECURITY_ADMIN_PASSWORD=${grafana_pass}
+    
