@@ -2,6 +2,7 @@ version: '3.2'
 services:
   prometheus_m1:
     image: prom/prometheus:${PROMETHEUS_TAG}
+    container_name: prometheus_m1
     ports:
     - 9090:9090
     command:
@@ -11,6 +12,7 @@ services:
     
   prometheus_s1:
     image: prom/prometheus:${PROMETHEUS_TAG}
+    container_name: prometheus_s1
     ports:
     - 9091:9090
     command:
@@ -20,6 +22,7 @@ services:
     
   prometheus_s2:
     image: prom/prometheus:${PROMETHEUS_TAG}
+    container_name: prometheus_s2
     ports:
     - 9092:9090
     command:
@@ -30,9 +33,11 @@ services:
   #=======Metrikleri Toplanacak Hedef Konteynerler============================
   node_exporter1:
     image: prom/node-exporter:${NODE_EXPORTER_TAG}
+    container_name: node_exporter1
     
   node_exporter2:
     image: prom/node-exporter:${NODE_EXPORTER_TAG}
+    container_name: node_exporter2
     
   #=======Grafana Servisi============================
   grafana:
