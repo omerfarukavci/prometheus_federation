@@ -1,0 +1,19 @@
+global:
+  scrape_interval:     5s
+  evaluation_interval: 5s
+rule_files:
+scrape_configs:
+  - job_name: 'federate'
+    scrape_interval: 15s
+    honor_labels: true
+    metrics_path: '/federate'
+    params:
+      'match[]':
+        - '{job="node_exporter"}'
+        - '{__name__=~"region:.*"}'
+    static_configs:
+      - targets:
+        - 'prometheus_s1:9091'
+        - 'prometheus_s2:9092'
+
+#TODO add honor_labels https://prometheus.io/docs/prometheus/latest/federation/
