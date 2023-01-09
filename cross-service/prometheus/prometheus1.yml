@@ -9,9 +9,9 @@ scrape_configs:
     - '{__name__=~"job:.*"}'
   static_configs:
   - targets:
-    #- prometheus1:9090 #Kendisi olduğu için izlemiyoruz.
-    - prometheus2:9091
-    - prometheus3:9092
+    #- prometheus1:9090 #the container itself
+    - prometheus2:9090
+    - prometheus3:9090
 - job_name: node
   scrape_interval: 5s
   static_configs:

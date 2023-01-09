@@ -10,8 +10,8 @@ scrape_configs:
   static_configs:
   - targets:
     - prometheus1:9090
-    #- prometheus2:9091 #Kendisi olduğu için izlemiyoruz.
-    - prometheus3:9092
+    #- prometheus2:9090 #the container itself
+    - prometheus3:9090
 - job_name: node
   scrape_interval: 5s
   static_configs:

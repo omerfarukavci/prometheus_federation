@@ -1,9 +1,16 @@
 version: '3.2'
+networks:
+  monitoring:
+    driver: bridge
 services:
+  #=======Prometheus Service===================================
   prometheus1:
     image: prom/prometheus:${PROMETHEUS_TAG}
+    container_name: prometheus1
     ports:
     - 9090:9090
+    networks:
+      - monitoring
     command:
     - --config.file=/etc/prometheus/prometheus.yml
     volumes:
@@ -11,8 +18,11 @@ services:
     
   prometheus2:
     image: prom/prometheus:${PROMETHEUS_TAG}
+    container_name: prometheus2
     ports:
     - 9091:9090
+    networks:
+      - monitoring
     command:
     - --config.file=/etc/prometheus/prometheus.yml
     volumes:
@@ -20,18 +30,48 @@ services:
     
   prometheus3:
     image: prom/prometheus:${PROMETHEUS_TAG}
+    container_name: prometheus3
     ports:
     - 9092:9090
+    networks:
+      - monitoring
     command:
     - --config.file=/etc/prometheus/prometheus.yml
     volumes:
     - ./prometheus/prometheus3.yml:/etc/prometheus/prometheus.yml:ro
-    
+  
+  #=======Containers whose metrics will be collected=======
   node_exporter1:
     image: prom/node-exporter:${NODE_EXPORTER_TAG}
+    container_name: node_exporter1
+    networks:
+      - monitoring
     
   node_exporter2:
     image: prom/node-exporter:${NODE_EXPORTER_TAG}
+    container_name: node_exporter2
+    networks:
+      - monitoring
     
   node_exporter3:
     image: prom/node-exporter:${NODE_EXPORTER_TAG}
+    container_name: node_exporter3
+    networks:
+      - monitoring
+    
+  #=======Grafana Service===================================
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    user: root:root
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    networks:
+      - monitoring
+    volumes:
+      - ./grafana/data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning/
+    environment:
+      - GF_SECURITY_ADMIN_USER=${grafana_user}
+      - GF_SECURITY_ADMIN_PASSWORD=${grafana_pass}
