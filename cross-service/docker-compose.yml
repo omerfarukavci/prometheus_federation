@@ -12,7 +12,18 @@ services:
     networks:
       - monitoring
     command:
-    - --config.file=/etc/prometheus/prometheus.yml
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.retention.size=${PROMETHEUS_SIZE}'
+      - '--storage.tsdb.retention.time=${PROMETHEUS_TIME}'
+      - '--storage.tsdb.path=/prometheus'
+      # curl -X POST http://localhost:9090/-/reload can be used
+      # if this flag is set
+      - '--web.enable-lifecycle'
+      # curl -X POST http://localhost:9090/api/v2/admin/tsdb/snapshot can be used
+      # if this flag is set
+      # Ref1: https://suraj.io/post/how-to-backup-and-restore-prometheus/
+      # Ref2: https://www.robustperception.io/taking-snapshots-of-prometheus-data
+      - '--web.enable-admin-api'
     volumes:
     - ./prometheus/prometheus1.yml:/etc/prometheus/prometheus.yml:ro
     
@@ -24,7 +35,18 @@ services:
     networks:
       - monitoring
     command:
-    - --config.file=/etc/prometheus/prometheus.yml
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.retention.size=${PROMETHEUS_SIZE}'
+      - '--storage.tsdb.retention.time=${PROMETHEUS_TIME}'
+      - '--storage.tsdb.path=/prometheus'
+      # curl -X POST http://localhost:9090/-/reload can be used
+      # if this flag is set
+      - '--web.enable-lifecycle'
+      # curl -X POST http://localhost:9090/api/v2/admin/tsdb/snapshot can be used
+      # if this flag is set
+      # Ref1: https://suraj.io/post/how-to-backup-and-restore-prometheus/
+      # Ref2: https://www.robustperception.io/taking-snapshots-of-prometheus-data
+      - '--web.enable-admin-api'
     volumes:
     - ./prometheus/prometheus2.yml:/etc/prometheus/prometheus.yml:ro
     
@@ -36,7 +58,18 @@ services:
     networks:
       - monitoring
     command:
-    - --config.file=/etc/prometheus/prometheus.yml
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.retention.size=${PROMETHEUS_SIZE}'
+      - '--storage.tsdb.retention.time=${PROMETHEUS_TIME}'
+      - '--storage.tsdb.path=/prometheus'
+      # curl -X POST http://localhost:9090/-/reload can be used
+      # if this flag is set
+      - '--web.enable-lifecycle'
+      # curl -X POST http://localhost:9090/api/v2/admin/tsdb/snapshot can be used
+      # if this flag is set
+      # Ref1: https://suraj.io/post/how-to-backup-and-restore-prometheus/
+      # Ref2: https://www.robustperception.io/taking-snapshots-of-prometheus-data
+      - '--web.enable-admin-api'
     volumes:
     - ./prometheus/prometheus3.yml:/etc/prometheus/prometheus.yml:ro
   
@@ -61,7 +94,7 @@ services:
     
   #=======Grafana Service===================================
   grafana:
-    image: grafana/grafana
+    image: grafana/grafana:${GRAFANA_TAG}
     container_name: grafana
     user: root:root
     restart: unless-stopped
@@ -73,5 +106,5 @@ services:
       - ./grafana/data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning/
     environment:
-      - GF_SECURITY_ADMIN_USER=${grafana_user}
-      - GF_SECURITY_ADMIN_PASSWORD=${grafana_pass}
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASS}
